@@ -4,3 +4,24 @@ db.listings.insertOne({
     address: '123 Main Street'
   });
   
+db.listings.insertOne({
+  propertyId: '67890',
+  name: 'Spacious Apartment',
+  address: '456 Elm Street',
+  type: 'Apartment',
+  status: 'For Rent',
+  price: 1500,
+  bedrooms: 2,
+  bathrooms: 1,
+  squareFeet: 1200
+});
+
+db.listings.insertOne({
+  propertyId: '24680',
+  name: 'Prime Commercial Space',
+  address: '789 Oak Avenue',
+  type: 'Commercial',
+  status: 'For Lease',
+  price: 10000,
+  squareFeet: 5000
+});
