@@ -1,0 +1,6 @@
+db.listings.insertOne({
+    propertyId: '12345',
+    name: 'Beautiful Apartment',
+    address: '123 Main Street'
+  });
+  
