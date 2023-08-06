@@ -13,6 +13,21 @@ export function displayHouseList(req, res, next) {
         }
     });
 }
+// Validation check on the property ID
+
+async function isPropertyIdAvailable(propertyId) {
+    const house = await houseModel.findOne({ propertyId });
+    return !house;
+}
+
+// Find house by property
+
+import houseModel from '../models/house.js';
+
+async function findHouseByPropertyId(propertyId) {
+    const house = await houseModel.findOne({ propertyId });
+    return house;
+}
 
 
 //  GET the House Details page in order to add a new house
