@@ -1,2 +1,4 @@
-export const MongoURI = "mongodb+srv://ElifBC:DartyZigot@mongocluster1.xxdcmfh.mongodb.net/Realtor1?retryWrites=true&w=majority"
-export const Secret = "someSecret";
+module.exports =
+ {
+ "URI":"mongodb+srv://anubhav8080:qG6UvifzmkLtvv8Y@cluster0.mpbedcl.mongodb.net/?retryWrites=true&w=majority"
+}
