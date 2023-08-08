@@ -4,10 +4,8 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const house = require("./routes/house");
-// const path = require('path');
 
-// const authRoute = require('./routes/authRoute')
-// const fs = require('fs'); // Import the fs module
+
 
 dotenv.config();
 
@@ -40,10 +38,19 @@ mongoose.connection.on("connected", () => {
 mongoose.connection.on("error", err => {
     console.log("DB connection failed: ", err);
 });
-// app.use(loggerMiddleware);
 
 
-app.use('/api/house', house);
-app.listen(4040, () => {
-    console.log('Server started on port 4040');
+app.use('/api/house', require("./routes/house"));
+app.get('/hello', async (req, res) => {
+    try {
+
+        res.send("hello")
+
+    } catch (error) {
+
+        res.status(500).send('Error generating PDF');
+    }
+});
+app.listen(4987, () => {
+    console.log('Server started on port 4987');
 });
