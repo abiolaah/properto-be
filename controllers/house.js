@@ -3,22 +3,16 @@ const houseCtrl = {
     async displayHouseList(req, res, next) {
         const houseCollection = await houseModel.find().exec();
 
-        // houseModel.find((err, houseCollection) => {
-        //     if (err) {
-        //         console.error(err);
-        //         res.status(500).json({ error: err });
-        //     } else {
-                res.json({ houses: houseCollection });
-        //     }
-        // });
+        res.json({ houses: houseCollection });
+
     },
 
-    async findHouseByPropertyId(propertyId) {
-        const house = await houseModel.findOne({ propertyId });
+    async findHouseByPropertyId(req, res, next) {
+        const house = await houseModel.findOne({ _id:req.params.id });
         return house;
     },
 
-    async processAddPage (req, res, next) {
+    async processAddPage(req, res, next) {
         let newHouse = houseModel({
             propertyId: req.body.propertyId,
             name: req.body.name,
@@ -32,15 +26,11 @@ const houseCtrl = {
             description: req.body.description,
             squareFeet: req.body.squareFeet,
         });
+        const house = await houseModel.create(newHouse).exec();
 
-        houseModel.create(newHouse, (err, house) => {
-            if (err) {
-                console.error(err);
-                res.status(500).json({ error: err });
-            } else {
-                res.json({ house });
-            }
-        });
+        res.json(house);
+
+
     }
 
 }

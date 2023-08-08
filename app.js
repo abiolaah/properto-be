@@ -41,16 +41,6 @@ mongoose.connection.on("error", err => {
 
 
 app.use('/api/house', require("./routes/house"));
-app.get('/hello', async (req, res) => {
-    try {
-
-        res.send("hello")
-
-    } catch (error) {
-
-        res.status(500).send('Error generating PDF');
-    }
-});
 app.listen(4987, () => {
     console.log('Server started on port 4987');
 });
