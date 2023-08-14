@@ -3,10 +3,11 @@ const houseCtrl = require('../controllers/house');
 
 const router = express.Router();
 
+router.post('/create', houseCtrl.createHouse);
+router.put('/update/:id', houseCtrl.displayHouseList);
+router.delete('/delete/:id', houseCtrl.deleteHouseByPropertyId);
 router.get('/list', houseCtrl.displayHouseList);
 router.get('/details/:id', houseCtrl.findHouseByPropertyId);
-router.post('/create', houseCtrl.displayHouseList);
-router.put('/update/:id', houseCtrl.displayHouseList);
 router.get('/search', houseCtrl.displayHouseList);
 
 
