@@ -11,7 +11,7 @@ router.get('/list', houseCtrl.displayHouseList);
 router.get('/details/:id', houseCtrl.findHouseByPropertyId);
 router.get('/search', houseCtrl.searchHouses);
 router.get('/find-nearby', houseCtrl.findHousesNearby);
-router.post('/upload-image', upload.single('image'), houseCtrl.uploadImage);
+
 const storage = multer.diskStorage({
     destination: './images',
     filename: function (req, file, cb) {
@@ -21,6 +21,6 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage });
-
+router.post('/upload-image', upload.single('image'), houseCtrl.uploadImage);
 
 module.exports = router;
