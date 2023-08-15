@@ -14,7 +14,8 @@ const HouseSchema = new Schema({
     description: String,
     squareFeet: String,
     latitude: Number,
-    longitude: Number
+    longitude: Number,
+    // images
 }, {
     timestamps: true,
     collection: 'houses'

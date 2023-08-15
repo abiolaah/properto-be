@@ -5,7 +5,7 @@ const multer = require('multer');
 const router = express.Router();
 
 router.post('/create', houseCtrl.createHouse);
-router.put('/update/:id', houseCtrl.displayHouseList);
+router.put('/update/:id', houseCtrl.updateHouse);
 router.delete('/delete/:id', houseCtrl.deleteHouseByPropertyId);
 router.get('/list', houseCtrl.displayHouseList);
 router.get('/details/:id', houseCtrl.findHouseByPropertyId);

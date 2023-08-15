@@ -37,6 +37,22 @@ const houseCtrl = {
         }
     },
 
+    async updateHouse(req, res, next) {
+        try {
+            const houseId = req.params.id;
+            const updatedHouse = await houseModel.findByIdAndUpdate(houseId, req.body, { new: true });
+
+            if (!updatedHouse) {
+                return res.status(404).json({ message: "House not found" });
+            }
+
+            res.status(200).json(updatedHouse);
+        } catch (error) {
+            console.error("Error updating house:", error);
+            res.status(500).json({ message: "Error updating house" });
+        }
+    },
+
     async findHouseByPropertyId(req, res, next) {
         try {
             const house = await houseModel.findOne({ _id: req.params.id }).exec();
@@ -127,8 +143,8 @@ const houseCtrl = {
                 return res.status(400).json({ message: "No image file provided." });
             }
 
-            const imagePath = path.join(__dirname, '../images', req.file.filename);
-            res.status(201).json({ imagePath });
+            const imagePath = path.join( 'images', req.file.filename);
+            res.status(201).json({ file:req.file.filename }); // use this http://localhost:4987/images/{filename}
         } catch (error) {
             console.error("Error uploading image:", error);
             res.status(500).json({ message: "Error uploading image" });

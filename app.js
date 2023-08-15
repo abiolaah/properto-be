@@ -41,6 +41,8 @@ mongoose.connection.on("error", err => {
 
 
 app.use('/api/house', require("./routes/house"));
+app.use('/images',express.static('images'));
+
 app.listen(4987, () => {
     console.log('Server started on port 4987');
 });
