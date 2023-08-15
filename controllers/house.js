@@ -1,10 +1,40 @@
 const houseModel = require('../models/house');
+const path = require('path');
 const houseCtrl = {
+
+    async searchHouses(req, res, next) {
+        try {
+            const queryFields = ['name', 'address', 'type', 'status', 'price', 'bedrooms', 'bathrooms', 'parking', 'description', 'squareFeet', 'latitude', 'longitude'];
+            const searchCriteria = {};
+
+            queryFields.forEach(field => {
+                const queryValue = req.query[field];
+                if (queryValue) {
+                    if (field === 'latitude' || field === 'longitude') {
+                        searchCriteria[field] = parseFloat(queryValue);
+                    } else {
+                        searchCriteria[field] = { $regex: queryValue, $options: 'i' };
+                    }
+                }
+            });
+
+            const searchResults = await houseModel.find(searchCriteria).exec();
+
+            res.status(200).json({ results: searchResults });
+        } catch (error) {
+            console.error("Error searching for houses:", error);
+            res.status(500).json({ message: "Error searching for houses" });
+        }
+    },
+
     async displayHouseList(req, res, next) {
-        const houseCollection = await houseModel.find().exec();
-
-        res.json({ houses: houseCollection });
-
+        try {
+            const houses = await houseModel.find().exec();
+            res.status(200).json({ houses });
+        } catch (error) {
+            console.error("Error fetching house list:", error);
+            res.status(500).json({ message: "Error fetching house list" });
+        }
     },
 
     async findHouseByPropertyId(req, res, next) {
@@ -52,25 +82,57 @@ const houseCtrl = {
         }
     },
 
-    async processAddPage(req, res, next) {
-        let newHouse = houseModel({
-            propertyId: req.body.propertyId,
-            name: req.body.name,
-            address: req.body.address,
-            type: req.body.type,
-            status: req.body.status,
-            price: req.body.price,
-            bedrooms: req.body.bedrooms,
-            bathrooms: req.body.bathrooms,
-            parking: req.body.parking,
-            description: req.body.description,
-            squareFeet: req.body.squareFeet,
-        });
-        const house = await houseModel.create(newHouse).exec();
+    async findHousesNearby(req, res, next) {
+        try {
+            const { latitude, longitude } = req.query;
 
-        res.json(house);
+            if (!latitude || !longitude) {
+                return res.status(400).json({ message: "Latitude and longitude are required query parameters." });
+            }
 
+            const nearbyHouses = await houseModel.find({
+                latitude: { $exists: true },
+                longitude: { $exists: true },
+                $expr: {
+                    $lt: [
+                        {
+                            $let: {
+                                vars: {
+                                    latDiff: { $subtract: ["$latitude", parseFloat(latitude)] },
+                                    lonDiff: { $subtract: ["$longitude", parseFloat(longitude)] }
+                                },
+                                in: {
+                                    $add: [
+                                        { $pow: ["$$latDiff", 2] },
+                                        { $pow: ["$$lonDiff", 2] }
+                                    ]
+                                }
+                            }
+                        },
+                        Math.pow(0.005, 2) // Square of the threshold value
+                    ]
+                }
+            }).exec();
 
+            res.status(200).json({ nearbyHouses });
+        } catch (error) {
+            console.error("Error finding nearby houses:", error);
+            res.status(500).json({ message: "Error finding nearby houses" });
+        }
+    },
+
+    async uploadImage(req, res, next) {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ message: "No image file provided." });
+            }
+
+            const imagePath = path.join(__dirname, '../images', req.file.filename);
+            res.status(201).json({ imagePath });
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            res.status(500).json({ message: "Error uploading image" });
+        }
     }
 
 }

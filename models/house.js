@@ -13,12 +13,12 @@ const HouseSchema = new Schema({
     parking: String,
     description: String,
     squareFeet: String,
-    
-    
+    latitude: Number,
+    longitude: Number
 }, {
     timestamps: true,
     collection: 'houses'
 });
 
-const house = mongoose.model('House', HouseSchema);
-module.exports = house;
+const House = mongoose.model('House', HouseSchema);
+module.exports = House;
