@@ -4,11 +4,10 @@ const houseCtrl = {
 
     async searchHouses(req, res, next) {
         try {
-            const queryFields = ['name', 'address', 'type', 'status', 'price', 'bedrooms', 'bathrooms', 'parking', 'description', 'squareFeet', 'latitude', 'longitude'];
+            const queryFields = [ 'address' , 'price', 'latitude', 'longitude'];
             const searchCriteria = {};
-
             queryFields.forEach(field => {
-                const queryValue = req.query[field];
+                const queryValue = req.query.query[field];
                 if (queryValue) {
                     if (field === 'latitude' || field === 'longitude') {
                         searchCriteria[field] = parseFloat(queryValue);
@@ -40,13 +39,14 @@ const houseCtrl = {
     async updateHouse(req, res, next) {
         try {
             const houseId = req.params.id;
-            const updatedHouse = await houseModel.findByIdAndUpdate(houseId, req.body, { new: true });
+            console.log(houseId,req.body)
+           // const updatedHouse = await houseModel.findByIdAndUpdate(houseId, req.body, { new: true });
 
-            if (!updatedHouse) {
-                return res.status(404).json({ message: "House not found" });
-            }
+            // if (!updatedHouse) {
+            //     return res.status(404).json({ message: "House not found" });
+            // }
 
-            res.status(200).json(updatedHouse);
+            // res.status(200).json(updatedHouse);
         } catch (error) {
             console.error("Error updating house:", error);
             res.status(500).json({ message: "Error updating house" });
@@ -87,11 +87,11 @@ const houseCtrl = {
     async createHouse(req, res, next) {
         try {
             const newHouseData = req.body; // Assuming the request body contains the new house data
+            
+           // Create a new house using the provided data
+           const createdHouse = await houseModel.create(newHouseData.formData);
 
-            // Create a new house using the provided data
-            const createdHouse = await houseModel.create(newHouseData);
-
-            res.status(201).json({ house: createdHouse });
+           res.status(201).json({ house: createdHouse });
         } catch (error) {
             console.error("Error creating house:", error);
             res.status(500).json({ message: "Error creating house" });
