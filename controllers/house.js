@@ -39,14 +39,13 @@ const houseCtrl = {
     async updateHouse(req, res, next) {
         try {
             const houseId = req.params.id;
-            console.log(houseId,req.body)
-           // const updatedHouse = await houseModel.findByIdAndUpdate(houseId, req.body, { new: true });
+           const updatedHouse = await houseModel.findByIdAndUpdate(houseId, req.body.formData, { new: true });
 
-            // if (!updatedHouse) {
-            //     return res.status(404).json({ message: "House not found" });
-            // }
+            if (!updatedHouse) {
+                return res.status(404).json({ message: "House not found" });
+            }
 
-            // res.status(200).json(updatedHouse);
+            res.status(200).json(updatedHouse);
         } catch (error) {
             console.error("Error updating house:", error);
             res.status(500).json({ message: "Error updating house" });
@@ -139,6 +138,7 @@ const houseCtrl = {
 
     async uploadImage(req, res, next) {
         try {
+            console.log(req.file)
             if (!req.file) {
                 return res.status(400).json({ message: "No image file provided." });
             }

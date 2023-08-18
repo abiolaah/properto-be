@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
         cb(null, customName);
     }
 });
-const upload = multer({ storage });
-router.post('/upload-image', upload.single('image'), houseCtrl.uploadImage);
 
+const upload = multer({ storage });
+router.post('/upload', upload.single('image'), houseCtrl.uploadImage);
 module.exports = router;
