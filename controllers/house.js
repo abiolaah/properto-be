@@ -4,15 +4,18 @@ const houseCtrl = {
 
     async searchHouses(req, res, next) {
         try {
-            const queryFields = [ 'address' , 'price', 'latitude', 'longitude'];
+            const queryFields = ['address', 'price', 'latitude', 'longitude'];
             const searchCriteria = {};
+            console.log(req.query);
             queryFields.forEach(field => {
-                const queryValue = req.query.query[field];
-                if (queryValue) {
-                    if (field === 'latitude' || field === 'longitude') {
-                        searchCriteria[field] = parseFloat(queryValue);
-                    } else {
-                        searchCriteria[field] = { $regex: queryValue, $options: 'i' };
+                if (req.query.query[field]) {
+                    const queryValue = req.query.query[field];
+                    if (queryValue) {
+                        if (field === 'latitude' || field === 'longitude') {
+                            searchCriteria[field] = parseFloat(queryValue);
+                        } else {
+                            searchCriteria[field] = { $regex: queryValue, $options: 'i' };
+                        }
                     }
                 }
             });
@@ -39,7 +42,7 @@ const houseCtrl = {
     async updateHouse(req, res, next) {
         try {
             const houseId = req.params.id;
-           const updatedHouse = await houseModel.findByIdAndUpdate(houseId, req.body.formData, { new: true });
+            const updatedHouse = await houseModel.findByIdAndUpdate(houseId, req.body, { new: true });
 
             if (!updatedHouse) {
                 return res.status(404).json({ message: "House not found" });
@@ -86,11 +89,11 @@ const houseCtrl = {
     async createHouse(req, res, next) {
         try {
             const newHouseData = req.body; // Assuming the request body contains the new house data
-            
-           // Create a new house using the provided data
-           const createdHouse = await houseModel.create(newHouseData.formData);
 
-           res.status(201).json({ house: createdHouse });
+            // Create a new house using the provided data
+            const createdHouse = await houseModel.create(newHouseData);
+
+            res.status(201).json({ house: createdHouse });
         } catch (error) {
             console.error("Error creating house:", error);
             res.status(500).json({ message: "Error creating house" });
@@ -143,8 +146,8 @@ const houseCtrl = {
                 return res.status(400).json({ message: "No image file provided." });
             }
 
-            const imagePath = path.join( 'images', req.file.filename);
-            res.status(201).json({ file:req.file.filename }); // use this http://localhost:4987/images/{filename}
+            const imagePath = path.join('images', req.file.filename);
+            res.status(201).json({ file: req.file.filename }); // use this http://localhost:4987/images/{filename}
         } catch (error) {
             console.error("Error uploading image:", error);
             res.status(500).json({ message: "Error uploading image" });
